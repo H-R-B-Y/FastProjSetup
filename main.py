@@ -16,8 +16,14 @@ import json
 import colorama
 from colorama import Fore, Style, Back
 
-with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "settings.json"), "r") as f:
-	settings = json.load(f)
+def load_settings():
+	script_dir = os.path.dirname(os.path.realpath(__file__))
+	settings_path = os.path.join(script_dir, "settings.json")
+	with open(settings_path, "r") as f:
+		settings = json.load(f)
+	return settings
+
+settings = load_settings()
 
 def cprint(string, color):
 	print(f"{color}{string}{Style.RESET_ALL}")
