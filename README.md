@@ -9,7 +9,7 @@ Too lazy. lol.
 
 ## Installation
 
-1. Run `./install.sh install`s
+1. Run `./install.sh install`
 
 Magic!
 
