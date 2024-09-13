@@ -1,0 +1,10 @@
+{
+	"libft": false,
+	"tag_dir": false,
+	"gitignore": [
+		"*.o",
+		"*.out",
+		"*.a",
+		"*.vscode"
+	]
+}
