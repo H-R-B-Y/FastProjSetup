@@ -14,7 +14,9 @@ import os
 import sys
 import json
 import colorama
+import subprocess
 from colorama import Fore, Style, Back
+
 
 def load_settings():
 	script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -30,6 +32,24 @@ def cprint(string, color):
 
 def cinput(string, color):
 	return input(f"{color}{string}{Style.RESET_ALL}")
+
+def check_updates():
+	cprint("Checking for updates...", Fore.GREEN)
+	cwd = os.getcwd()
+	script_path = os.path.dirname(os.path.realpath(__file__))
+	os.chdir(script_path)
+	pipe = subprocess.Popen(["git", "fetch", "--dry-run"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	stdout, stderr = pipe.communicate()
+	if pipe.returncode == 0:
+		if stdout:
+			cprint("Updates available.", Fore.YELLOW)
+			if cinput("Update? (y/n): ", Fore.BLUE) == "y":
+				os.system("git stash")
+				os.system("git pull")
+				os.system("git stash apply")
+				if (cinput("Restart? (y/n): ", Fore.BLUE) == "y"):
+					os.execl(sys.executable, sys.executable, *sys.argv)
+	os.chdir(cwd)
 
 def setup_project(*args):
 	colorama.init()
