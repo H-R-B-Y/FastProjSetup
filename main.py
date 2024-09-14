@@ -17,7 +17,6 @@ import colorama
 import subprocess
 from colorama import Fore, Style, Back
 
-
 def load_settings():
 	script_dir = os.path.dirname(os.path.realpath(__file__))
 	settings_path = os.path.join(script_dir, "settings.json")
@@ -119,11 +118,17 @@ def setup_project(*args):
 			cprint("Failed to create .gitignore.", Fore.RED)
 
 	if settings["libft"] and ("libft" in args or cinput("Add libft? (y/n): ", Fore.BLUE) == "y"):
-		code = os.system(f"git submodule add {settings['libft']} libft")
-		if code == 0:
+		x = []
+		cprint("Cloning libft...", Fore.GREEN)
+		x[0] = os.system(f"git clone {settings['libft']} libft")
+		x[1] = os.chdir("libft") if x[0] == 0 else 0
+		x[2] = os.system("rm -rf .git") if x[1] == 0 else 0
+		x[3] = os.chdir("..") if x[2] == 0 else 0
+		if all(x):
 			cprint("libft added.", Fore.GREEN)
 		else:
-			cprint("Failed to add libft.", Fore.RED)
+			reason = ["Clone failed.", "Change directory failed.", "Remove .git failed.", "Change directory failed."]
+			cprint(f"Failed to add libft. Reason: {reason[x.index(1)]}", Fore.RED)
 
 	while settings["tag_dir"] and cinput("Add to tag? (y/n): ", Fore.BLUE) == "y":
 		tag_list = [f.path for f in os.scandir(settings["tag_dir"]) if f.is_dir()]
